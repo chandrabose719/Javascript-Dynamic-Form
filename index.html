@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Welcome To My Sample</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+<body>
+	<div id="header-part">
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="index.html"><img src="images/logo.png" alt="My Sample"></a>
+				</div>
+				<div class="navbar-right">
+					<ul class="nav navbar-nav"> 
+						<li><a href="index.html">Home</a></li>
+						<li><a href="">Option One</a></li>
+						<li><a href="">Option Two</a></li>
+					</ul>
+				</div>	
+			</div>
+		</div>
+	</div>
+
+	<div id="main-part">
+		<div class="container">
+		<div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-6 col-sm-offset-3 col-xs-12">
+				<div id="form-content">
+					
+				</div>
+			</div>	
+		</div>
+	</div>
+
+	<script type="text/javascript" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		var request = '';
+		$(document).ready(function(){
+			request = new XMLHttpRequest();
+			request.open("GET", "xml/xmldata.xml", false);
+			request.send();
+			var xml = request.responseXML;
+			var forms = xml.getElementsByTagName("*");      
+			var dataArray = [];
+			for(var i = 1; i < forms.length; i++) {
+				var dataObj = {};
+				var tag = forms[i].tagName
+				dataObj.tag = tag;
+				var type = forms[i].getAttribute("class");
+				dataObj.type = type;
+				var value = forms[i].childNodes[0].nodeValue;
+				dataObj.value = value;
+				dataArray.push(dataObj);
+			}
+			var formField = "<form>";
+				for (var i = 0; i < dataArray.length; i++) {
+					if (dataArray[i].type =='number') {
+						formField += "<div class='form-group col-lg-6 col-lg-offset-2 col-md-6 col-md-offset-2 col-sm-12 col-xs-12'>";
+						formField += "<label id="+dataArray[i].tag+">"+dataArray[i].tag+" :</label>";
+						formField += "<input class='form-control' type="+dataArray[i].type+" value="+dataArray[i].value+" readonly>";
+						formField += "</div>";
+					}
+					if (dataArray[i].type =='text') {
+						formField += "<div class='form-group col-lg-6 col-lg-offset-2 col-md-6 col-md-offset-2 col-sm-12 col-xs-12'>";
+						formField += "<label id="+dataArray[i].tag+">"+dataArray[i].tag+" :</label>";
+						formField += "<input class='form-control' type="+dataArray[i].type+" value="+dataArray[i].value+">";
+						formField += "</div>";
+					}
+					if (dataArray[i].type =='href') {
+						formField += "<div style='text-align:center; font-size:18px;' class='form-group col-lg-6 col-lg-offset-2 col-md-6 col-md-offset-2 col-sm-12 col-xs-12'>";
+						formField += "<a "+dataArray[i].type+"="+dataArray[i].value+" value="+dataArray[i].tag+" target='_blank'>"+dataArray[i].tag+"</a>";
+						formField += "</div>";
+					}
+					if (dataArray[i].type =='button') {
+						formField += "<div class='form-group col-lg-6 col-lg-offset-2 col-md-6 col-md-offset-2 col-sm-12 col-xs-12'>";
+						formField += "<input class='form-control btn btn-info' type="+dataArray[i].type+" value="+dataArray[i].value+" onclick='updateData(this.form)'>";
+						formField += "</div>";
+					}
+				}
+				formField += "</form>";
+			$('#form-content').append(formField);
+		});
+
+		function updateData(form){
+			
+			for (var i = 0; i < form.length; i++) {
+				if(document.getElementsByTagName("label")[i] != undefined){
+					var tag = document.getElementsByTagName("label")[i].getAttribute('id');
+				    var dataClass = document.getElementsByTagName("input")[i].getAttribute('type');
+				    var value = document.getElementsByTagName("input")[i].value;
+				    var newTag = "<"+tag+" class=\'"+dataClass+"\'>"+value+"</"+tag+">";
+				    request = new XMLHttpRequest();
+					request.open("POST", "xml/xmldata.xml", true);
+					request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				    request.send(newTag);
+				}
+				else{
+					if(document.getElementsByTagName("input")[i] != undefined){
+						var tag = document.getElementsByTagName("input")[i].getAttribute('type');
+						var value = document.getElementsByTagName("input")[i].value;
+						var newTag = "<"+tag+" class="+tag+">"+value+"</"+tag+">";
+						request = new XMLHttpRequest();
+						request.open("POST", "xml/xmldata.xml", true);
+						request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					    request.send(newTag);
+					}
+					if (document.getElementsByTagName("a")[i] != undefined) {
+						var dataClass = document.getElementsByTagName("a")[i].getAttribute('href');
+						var value = document.getElementsByTagName("a")[i].getAttribute('value');		
+						var newTag = "<"+value+" class=herf>"+dataClass+"</"+value+">";
+						request = new XMLHttpRequest();
+						request.open("POST", "xml/xmldata.xml", true);
+						request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+						request.send(newTag);
+					}
+				}
+			}
+		}
+	</script>
+</body>
+</html>
+
