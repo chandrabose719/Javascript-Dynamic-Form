@@ -1,0 +1,8 @@
+<form>
+	<name class="text">sahil</name>
+	<age class="number">24</age>
+	<mobileNumber class="text">7022790822</mobileNumber>
+	<company class="text">Jiny</company>
+	<linkedIn class="href">https://www.linkedin.com/in/sahil-sachdeva-68b58557</linkedIn>
+	<button class="button">Submit</button>
+</form>
