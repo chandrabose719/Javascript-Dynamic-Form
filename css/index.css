@@ -1,0 +1,24 @@
+a:hover{
+	text-decoration-line:none; 
+}
+
+#header-part .container .navbar-header{
+	margin:0px 0px 10px 30px;	   
+}
+#header-part ul{
+	margin:5px 0px 0px 0px;  	   
+}
+#header-part ul li a{
+	color:#ffffff;
+}
+#header-part ul li a:hover{
+	color:red;
+}
+
+#main-part{
+	width:100%;
+	background:#ffffff;  
+}
+#main-part .container{
+	padding:100px 0px 100px 0px; 
+}
